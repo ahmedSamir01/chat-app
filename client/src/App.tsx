@@ -4,8 +4,8 @@ import { Socket, io } from "socket.io-client";
 import "./App.css";
 import Chat from "./components/chat/Chat";
 
-const socket: Socket = io("http://localhost:3001");
-// const socket: Socket = io("http://192.168.1.4:3001");
+// const socket: Socket = io("http://localhost:3001");
+const socket: Socket = io("http://192.168.1.6:3001");
 
 function App() {
   const [username, setUsername] = useState<string>("");
