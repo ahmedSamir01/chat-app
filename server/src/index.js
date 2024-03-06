@@ -15,35 +15,28 @@ const io = new Server(server, {
   },
 });
 
-let messages = [];
-let roomId = "";
-
 io.on("connection", (socket) => {
   socket.on("join_room", (data, callback) => {
-    // initiate the room messages
-    if (roomId === data && messages?.length) {
-      socket.emit("init_room", messages);
-      console.log("exist");
-    } else {
-      messages = [];
-      roomId = "";
-
-      console.log("empty");
-    }
-    console.log({ roomId, data, messages });
     socket.join(data);
-    roomId = data;
 
     // Acknowledge the client by calling the callback
     callback && callback();
   });
 
   socket.on("send_message", (data, callback) => {
-    messages.push(data);
+    console.log(data.room);
     // send message to room members , whos have same roomID
-    socket.to(10000).emit("receive_message", messages);
+    socket.to(data.room).emit("receive_message", data);
 
-    callback && callback(messages);
+    callback && callback(data);
+  });
+
+  socket.on("leave_room", (data, callback) => {
+    // Leave the room
+    socket.leave(data.room);
+
+    // Acknowledge the client by calling the callback
+    callback && callback();
   });
 
   socket.on("disconnect", () => {});

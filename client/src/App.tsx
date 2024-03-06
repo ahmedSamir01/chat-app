@@ -4,15 +4,14 @@ import { Socket, io } from "socket.io-client";
 import "./App.css";
 import Chat from "./components/chat/Chat";
 
-// const socket: Socket = io("http://localhost:3001");
-const socket: Socket = io("http://192.168.1.4:3001");
+const socket: Socket = io("http://localhost:3001");
+// const socket: Socket = io("http://192.168.1.4:3001");
 
 function App() {
   const [username, setUsername] = useState<string>("");
   const [room, setRoom] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isRoomCreated, setIsRoomCreated] = useState<boolean>(false);
-  const [initialMessages, setInitialMessages] = useState([]);
 
   // subscribe to a room
   const joinRoom = () => {
@@ -28,17 +27,15 @@ function App() {
     socket.on("connect", () => {
       alert("connected successfully!");
       setIsConnected(true);
-
-      socket.on("init_room", (data) => {
-        setIsRoomCreated(true);
-        setInitialMessages(data);
-      });
     });
   }, []);
 
   const existChat = () => {
-    setIsRoomCreated(false);
-    setInitialMessages([]);
+    socket.emit("leave_room", room, () => {
+      setIsRoomCreated(false);
+      setUsername("");
+      setRoom("");
+    });
   };
 
   return (
@@ -68,7 +65,6 @@ function App() {
           username={username}
           room={room}
           close={existChat}
-          initialMessages={initialMessages}
         />
       )}
     </div>

@@ -7,6 +7,7 @@ interface messageBodyModel {
   author: string;
   message: string;
   time: string;
+  room: string;
 }
 
 function Chat({
@@ -14,17 +15,14 @@ function Chat({
   username,
   room,
   close,
-  initialMessages,
 }: {
   socket: Socket;
   username: string;
   room: string;
   close: () => void;
-  initialMessages: messageBodyModel[];
 }) {
   const [currentMessage, setCurrentMessage] = useState<string>();
-  const [messageList, setMessageList] =
-    useState<messageBodyModel[]>(initialMessages);
+  const [messageList, setMessageList] = useState<messageBodyModel[]>([]);
 
   const sendMessage = async () => {
     if (currentMessage) {
@@ -37,23 +35,18 @@ function Chat({
           ":" +
           new Date(Date.now()).getMinutes(),
       };
-      await socket.emit(
-        "send_message",
-        messageData,
-        (data: messageBodyModel[]) => {
-          setMessageList(data);
-          setCurrentMessage("");
-        }
-      );
+      await socket.emit("send_message", messageData);
+      setMessageList((prev) => [...prev, messageData]);
+      setCurrentMessage("");
     }
   };
 
   // recieving messages (get messages form the author (sender))
   useEffect(() => {
-    socket.on("receive_message", (data: messageBodyModel[]) => {
+    socket.on("receive_message", (data: messageBodyModel) => {
       console.log(data);
 
-      setMessageList(data);
+      data.room === room && setMessageList((prev) => [...prev, data]);
     });
   }, [socket]);
 
