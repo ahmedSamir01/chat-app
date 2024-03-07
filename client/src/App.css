@@ -7,6 +7,7 @@
   display: grid;
   place-items: center;
 }
+
 body {
   margin: 0%;
   padding: 0%;
@@ -16,26 +17,30 @@ body {
   display: flex;
   flex-direction: column;
   text-align: center;
+  width: 15%;
+  max-width: 400px;
+  min-width: 200px;
 }
 
 .joinChatContainer h3 {
-  font-size: 2.5rem;
+  font-size: clamp(1.5rem, 2.5vw, 2.5rem);
   margin-bottom: 1rem;
+  text-transform: capitalize;
 }
 .joinChatContainer input {
-  width: 210px;
-  height: 40px;
-  margin: 7px;
+  width: 100%;
+  height: 3rem;
+  margin: 0.5rem 0;
   border: 2px solid #43a047;
   border-radius: 5px;
-  padding: 5px;
+  padding: 0.9rem;
   font-size: 16px;
 }
 
 .joinChatContainer button {
-  width: 225px;
+  width: 100%;
   height: 50px;
-  margin: 7px;
+  margin: 0.7rem 0;
   border: none;
   border-radius: 5px;
   padding: 5px;
@@ -43,6 +48,7 @@ body {
   background: #43a047;
   color: #fff;
   cursor: pointer;
+  text-transform: capitalize;
 }
 
 .joinChatContainer button:hover {

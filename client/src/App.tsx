@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import "./App.css";
 import Chat from "./components/chat/Chat";
+import Spinner from "./components/chat/Spinner";
 
+const socket: Socket = io("https://server-fmfo.onrender.com");
 // const socket: Socket = io("http://localhost:3001");
-const socket: Socket = io("http://192.168.1.6:3001");
+// const socket: Socket = io("http://192.168.1.6:3001");
 
 function App() {
   const [username, setUsername] = useState<string>("");
@@ -25,9 +27,12 @@ function App() {
   useEffect(() => {
     // In case connected
     socket.on("connect", () => {
-      alert("connected successfully!");
       setIsConnected(true);
     });
+
+    return () => {
+      socket.emit("disconnect");
+    };
   }, []);
 
   const existChat = () => {
@@ -45,7 +50,7 @@ function App() {
           <h3>join a chat</h3>
           <input
             type="text"
-            placeholder="jhon.."
+            placeholder="username"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setUsername(e.target.value)
             }
@@ -55,8 +60,13 @@ function App() {
             placeholder="room id"
             onChange={(e) => setRoom(e.target.value)}
           />
-          <button disabled={!isConnected} onClick={joinRoom}>
-            join room
+          <button
+            className="btn btn-success"
+            disabled={!isConnected}
+            onClick={joinRoom}
+          >
+            {isConnected ? null : <Spinner />}
+            {isConnected ? "join room" : `connecting...`}
           </button>
         </div>
       ) : (
