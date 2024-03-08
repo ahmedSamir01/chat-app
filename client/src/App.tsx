@@ -5,8 +5,8 @@ import "./App.css";
 import Chat from "./components/chat/Chat";
 import Spinner from "./components/chat/Spinner";
 
-const socket: Socket = io("https://server-fmfo.onrender.com");
-// const socket: Socket = io("http://localhost:3001");
+// const socket: Socket = io("https://server-fmfo.onrender.com");
+const socket: Socket = io("http://localhost:3001");
 // const socket: Socket = io("http://192.168.1.6:3001");
 
 function App() {
@@ -29,10 +29,6 @@ function App() {
     socket.on("connect", () => {
       setIsConnected(true);
     });
-
-    return () => {
-      socket.emit("disconnect");
-    };
   }, []);
 
   const existChat = () => {

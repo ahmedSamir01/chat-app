@@ -24,19 +24,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", (data, callback) => {
-    console.log(data.room);
     // send message to room members , whos have same roomID
     socket.to(data.room).emit("receive_message", data);
 
     callback && callback(data);
-  });
-
-  socket.on("leave_room", (data, callback) => {
-    // Leave the room
-    socket.leave(data.room);
-
-    // Acknowledge the client by calling the callback
-    callback && callback();
   });
 
   socket.on("disconnect", () => {});
@@ -45,3 +36,18 @@ io.on("connection", (socket) => {
 server.listen(3001, () => {
   console.log("listening on *:3001");
 });
+
+/*
+socket.on("leave_room", (data, callback) => {
+    // Leave the room
+    socket.leave(data);
+    // socket.leaveAll();
+
+    // Notify all clients in the room that someone is leaving
+    socket.to(data).emit("user_left");
+    // socket.except("").emit("user_left");
+
+    // Acknowledge the client by calling the callback
+    callback && callback();
+  });
+*/

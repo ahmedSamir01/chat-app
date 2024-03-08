@@ -14,7 +14,6 @@ function Chat({
   socket,
   username,
   room,
-  close,
 }: {
   socket: Socket;
   username: string;
@@ -36,6 +35,7 @@ function Chat({
           new Date(Date.now()).getMinutes(),
       };
       await socket.emit("send_message", messageData);
+
       setMessageList((prev) => [...prev, messageData]);
       setCurrentMessage("");
     }
@@ -44,10 +44,10 @@ function Chat({
   // recieving messages (get messages form the author (sender))
   useEffect(() => {
     socket.on("receive_message", (data: messageBodyModel) => {
-      console.log(data);
-
       data.room === room && setMessageList((prev) => [...prev, data]);
     });
+
+    // socket.on("user_left", close);
   }, [socket]);
 
   return (
@@ -86,7 +86,6 @@ function Chat({
         />
         <button onClick={sendMessage}> &#9658;</button>
       </div>
-      <button onClick={close}>exist</button>
     </div>
   );
 }
