@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import ScrollToBottom from "react-scroll-to-bottom";
+import { handleKeyPress } from "../../helpers/handleKeyPress";
 
 interface messageBodyModel {
   author: string;
@@ -22,6 +23,7 @@ function Chat({
 }) {
   const [currentMessage, setCurrentMessage] = useState<string>();
   const [messageList, setMessageList] = useState<messageBodyModel[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const sendMessage = async () => {
     if (currentMessage) {
@@ -49,6 +51,10 @@ function Chat({
 
     // socket.on("user_left", close);
   }, [socket]);
+
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <div className="chat-window">
@@ -80,9 +86,10 @@ function Chat({
       <div className="chat-footer">
         <input
           type="text"
-          placeholder="Hey..."
+          ref={inputRef}
           value={currentMessage}
           onChange={(e) => setCurrentMessage(e.target.value)}
+          onKeyDown={(e) => handleKeyPress(e, sendMessage)}
         />
         <button onClick={sendMessage}> &#9658;</button>
       </div>

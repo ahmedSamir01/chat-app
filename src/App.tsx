@@ -4,6 +4,7 @@ import { Socket, io } from "socket.io-client";
 import "./App.css";
 import Chat from "./components/chat/Chat";
 import Spinner from "./components/chat/Spinner";
+import { handleKeyPress } from "./helpers/handleKeyPress";
 
 const socket: Socket = io("https://server-fmfo.onrender.com");
 // const socket: Socket = io("http://localhost:3001");
@@ -50,11 +51,13 @@ function App() {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setUsername(e.target.value)
             }
+            onKeyDown={(e) => handleKeyPress(e, joinRoom)}
           />
           <input
             type="text"
             placeholder="room id"
             onChange={(e) => setRoom(e.target.value)}
+            onKeyDown={(e) => handleKeyPress(e, joinRoom)}
           />
           <button
             className="btn btn-success"
